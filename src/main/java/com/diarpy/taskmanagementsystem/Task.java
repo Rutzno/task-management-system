@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Mack_TB
  * @since 18/05/2024
- * @version 1.0.4
+ * @version 1.0.5
  */
 
 @Entity
