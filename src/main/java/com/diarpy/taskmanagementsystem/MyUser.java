@@ -3,10 +3,13 @@ package com.diarpy.taskmanagementsystem;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Mack_TB
  * @since 18/05/2024
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 @Entity
@@ -23,6 +26,9 @@ public class MyUser {
 //    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
     private String authority;
+
+    @OneToMany(mappedBy = "myUser")
+    private List<Task> tasks = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -54,5 +60,13 @@ public class MyUser {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }
