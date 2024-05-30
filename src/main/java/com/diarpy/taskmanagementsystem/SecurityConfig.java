@@ -25,11 +25,12 @@ public class SecurityConfig {
         return http
                 .httpBasic(Customizer.withDefaults()) // enable basic HTTP authentication
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST,"/api/accounts").permitAll()
-                        .requestMatchers("/error").permitAll() // expose the /error endpoint
-                        .requestMatchers("/actuator/shutdown").permitAll() // required for tests
-                        .requestMatchers("/h2-console/**").permitAll() // expose H2 console
-                        .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.POST,"/api/accounts").permitAll()
+                                .requestMatchers("/error").permitAll() // expose the /error endpoint
+                                .requestMatchers("/actuator/shutdown").permitAll() // required for tests
+                                .requestMatchers("/h2-console/**").permitAll() // expose H2 console
+//                        .requestMatchers("/api/tasks/**").authenticated()
+                                .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // allow modifying requests from tests
 //                .headers(cfg -> cfg.frameOptions().disable()) // disable X-Frame-Options to unblock it
