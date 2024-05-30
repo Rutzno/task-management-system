@@ -24,6 +24,11 @@ public class Task {
     private TaskStatus status;
     private String author;
     private String assignee;
+    /* @JsonProperty(value = "total_comments")
+     private int totalComments;*/
+    @OneToMany(mappedBy = "task")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<Comment> comments = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -78,6 +83,14 @@ public class Task {
 
     public void setAssignee(String assignee) {
         this.assignee = assignee;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public MyUser getMyUser() {
