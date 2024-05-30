@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,17 +18,19 @@ import java.util.Optional;
 /**
  * @author Mack_TB
  * @since 18/05/2024
- * @version 1.0.4
+ * @version 1.0.5
  */
 
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final CommentRepository commentRepository;
     private final MyUserRepository myUserRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, MyUserRepository myUserRepository) {
+    public TaskService(TaskRepository taskRepository, CommentRepository commentRepository, MyUserRepository myUserRepository) {
         this.taskRepository = taskRepository;
+        this.commentRepository = commentRepository;
         this.myUserRepository = myUserRepository;
     }
 
@@ -55,13 +58,19 @@ public class TaskService {
                 taskRepository.findByMyUser_Email(author, sortById);
     }
 
-    public List<Task> findAllTasks(String author, String assignee) {
+    public List<TaskDto> findAllTasks(String author, String assignee) {
         Sort sortById = Sort.by("id").descending();
         Task probe = new Task();
         if (author != null) probe.setAuthor(author.toLowerCase());
         if (assignee != null) probe.setAssignee(assignee.toLowerCase());
         Example<Task> example = Example.of(probe);
-        return taskRepository.findAll(example, sortById);
+        List<Task> tasks = taskRepository.findAll(example, sortById);
+        List<TaskDto> taskDtos = new ArrayList<>();
+        for (Task task : tasks) {
+            TaskDto taskDto = new TaskDto(task);
+            taskDtos.add(taskDto);
+        }
+        return taskDtos;
     }
 
     public ResponseEntity<Task> updateByAssignee(Authentication authentication,
@@ -104,5 +113,33 @@ public class TaskService {
             return ResponseEntity.ok(task);
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    public ResponseEntity<?> commentTask(Authentication authentication,
+                                         Long id,
+                                         Comment newComment) {
+        if (!taskRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        Optional<Task> optTask = taskRepository.findById(id);
+        if (optTask.isPresent()) {
+            Task task = optTask.get();
+            newComment.setText(newComment.getText());
+            newComment.setAuthor(authentication.getName());
+            newComment.setTask(task);
+            commentRepository.save(newComment);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    public ResponseEntity<List<CommentProjection>> findAllCommentsByTask(Long id) {
+        List<CommentProjection> results;
+        if (!taskRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        Sort sortById = Sort.by("id").descending();
+        results = commentRepository.findByTask_Id(id, sortById);
+        return ResponseEntity.ok(results);
     }
 }

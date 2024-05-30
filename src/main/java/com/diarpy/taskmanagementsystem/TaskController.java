@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Mack_TB
  * @since 18/05/2024
- * @version 1.0.4
+ * @version 1.0.5
  */
 
 @RestController
@@ -34,8 +34,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getTasks(@RequestParam(required = false) String author,
-                               @RequestParam(required = false) String assignee) {
+    public List<TaskDto> getTasks(@RequestParam(required = false) String author,
+                                  @RequestParam(required = false) String assignee) {
         return taskService.findAllTasks(author, assignee);
     }
 
@@ -53,6 +53,19 @@ public class TaskController {
         return taskService.updateByStatus(authentication, id, statusTaskRequest.status());
     }
 
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<?> commentTask(Authentication authentication,
+                                         @PathVariable Long id,
+                                         @RequestBody @Valid Comment comment) {
+        return taskService.commentTask(authentication, id, comment);
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentProjection>> getCommentsByTask(@PathVariable Long id) {
+        return taskService.findAllCommentsByTask(id);
+    }
+
     record AssignTaskRequest(String assignee) {}
     record StatusTaskRequest(TaskStatus status) {}
+    record CommentRequest(String text) { }
 }
