@@ -38,7 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .httpBasic(Customizer.withDefaults()) // enable basic HTTP authentication
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt) // enabling jwt authentication
+                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())) // enabling jwt authentication
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(HttpMethod.POST,"/api/accounts").anonymous()
                                 .requestMatchers("/error").permitAll() // expose the /error endpoint
