@@ -8,10 +8,11 @@ import java.util.List;
 /**
  * @author Mack_TB
  * @since 18/05/2024
- * @version 1.0.2
+ * @version 1.0.4
  */
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAll(Sort sort);
     List<Task> findByMyUser_Email(String email, Sort sort);
+    //    boolean existsById(Long id);
 }
