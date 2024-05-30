@@ -33,6 +33,4 @@ public class ApplicationController {
     public void getTasks() {
 
     }
-
-//    record RegistrationRequest(String email, String password) { }
 }
