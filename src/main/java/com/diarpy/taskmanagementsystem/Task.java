@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * @author Mack_TB
  * @since 18/05/2024
- * @version 1.0.2
+ * @version 1.0.4
  */
 
 @Entity
@@ -21,8 +21,9 @@ public class Task {
     private String title;
     @NotBlank(message = "Description is mandatory")
     private String description;
-    private String status;
+    private TaskStatus status;
     private String author;
+    private String assignee;
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -55,11 +56,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
@@ -69,6 +70,14 @@ public class Task {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
     }
 
     public MyUser getMyUser() {
