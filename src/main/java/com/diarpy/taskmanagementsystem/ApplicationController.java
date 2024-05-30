@@ -28,9 +28,4 @@ public class ApplicationController {
         return myUserService.register(myUser, errors);
     }
 
-    @GetMapping(path = "/tasks")
-    @ResponseStatus(code = HttpStatus.OK)
-    public void getTasks() {
-
-    }
 }
