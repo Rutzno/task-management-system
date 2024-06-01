@@ -29,12 +29,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class ApplicationController {
+public class MyUserController {
     private final MyUserService myUserService;
     private final JwtEncoder jwtEncoder;
 
     @Autowired
-    public ApplicationController(MyUserService myUserService, JwtEncoder jwtEncoder) {
+    public MyUserController(MyUserService myUserService, JwtEncoder jwtEncoder) {
         this.myUserService = myUserService;
         this.jwtEncoder = jwtEncoder;
     }
