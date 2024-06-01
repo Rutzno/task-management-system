@@ -1,6 +1,7 @@
 package com.diarpy.taskmanagementsystem.businessLayer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -18,16 +19,22 @@ public class TaskDto {
     private String author;
     private String assignee;
     @JsonProperty(value = "total_comments")
-    private int totalComments;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer totalComments;
 
     public TaskDto(Task task) {
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
         this.status = task.getStatus();
-        this.author = task.getAuthor();
-        this.assignee = task.getAssignee();
+        this.author = task.getAuthor().getEmail();
+        this.assignee = task.getAssignee() == null ? "none" : task.getAssignee().getEmail();
         this.totalComments = task.getComments().size();
+    }
+
+    public TaskDto(Task task, Integer totalComments) {
+        this(task);
+        this.totalComments = totalComments;
     }
 
     public Long getId() {
@@ -78,11 +85,11 @@ public class TaskDto {
         this.assignee = assignee;
     }
 
-    public int getTotalComments() {
+    public Integer getTotalComments() {
         return totalComments;
     }
 
-    public void setTotalComments(int totalComments) {
+    public void setTotalComments(Integer totalComments) {
         this.totalComments = totalComments;
     }
 }

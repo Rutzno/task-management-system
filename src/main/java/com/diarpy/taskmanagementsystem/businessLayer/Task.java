@@ -1,6 +1,5 @@
 package com.diarpy.taskmanagementsystem.businessLayer;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -18,24 +17,21 @@ import java.util.List;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     @NotBlank(message = "Title is mandatory")
     private String title;
     @NotBlank(message = "Description is mandatory")
     private String description;
     private TaskStatus status;
-    private String author;
-    private String assignee;
-    /* @JsonProperty(value = "total_comments")
-     private int totalComments;*/
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private MyUser author;
+    @ManyToOne
+    @JoinColumn(name = "assignee_id")
+    private MyUser assignee;
     @OneToMany(mappedBy = "task")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Comment> comments = new ArrayList<>();
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private MyUser myUser;
 
     public Task() {
     }
@@ -72,19 +68,19 @@ public class Task {
         this.status = status;
     }
 
-    public String getAuthor() {
+    public MyUser getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(MyUser author) {
         this.author = author;
     }
 
-    public String getAssignee() {
+    public MyUser getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(String assignee) {
+    public void setAssignee(MyUser assignee) {
         this.assignee = assignee;
     }
 
@@ -94,13 +90,5 @@ public class Task {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public MyUser getMyUser() {
-        return myUser;
-    }
-
-    public void setMyUser(MyUser myUser) {
-        this.myUser = myUser;
     }
 }

@@ -39,18 +39,18 @@ public class TaskService {
 
     // Not Used
     public Task save(@AuthenticationPrincipal UserDetails userDetails, Task newTask) {
-        newTask.setMyUser(myUserRepository.findByEmail(userDetails.getUsername()));
-        newTask.setAuthor(userDetails.getUsername());
+//        newTask.setMyUser(myUserRepository.findByEmail(userDetails.getUsername()));
+        newTask.setAuthor(myUserRepository.findByEmail(userDetails.getUsername()));
         newTask.setStatus(TaskStatus.CREATED);
         return taskRepository.save(newTask);
     }
 
-    public Task save(Authentication auth, Task newTask) {
-        newTask.setMyUser(myUserRepository.findByEmail(auth.getName()));
-        newTask.setAuthor(auth.getName());
+    public TaskDto save(Authentication auth, Task newTask) {
+        newTask.setAuthor(myUserRepository.findByEmail(auth.getName()));
         newTask.setStatus(TaskStatus.CREATED);
-        newTask.setAssignee("none");
-        return taskRepository.save(newTask);
+//        newTask.setAssignee("none");
+        newTask = taskRepository.save(newTask);
+        return new TaskDto(newTask, null);
     }
 
     // Not Used
@@ -58,14 +58,28 @@ public class TaskService {
         Sort sortById = Sort.by("id").descending();
         return author == null ?
                 taskRepository.findAll(sortById) :
-                taskRepository.findByMyUser_Email(author, sortById);
+                taskRepository.findByAuthor_Email(author, sortById);
     }
 
-    public List<TaskDto> findAllTasks(String author, String assignee) {
+    public List<TaskDto> findAllTasks(String authorEmail, String assigneeEmail) {
         Sort sortById = Sort.by("id").descending();
         Task probe = new Task();
-        if (author != null) probe.setAuthor(author.toLowerCase());
-        if (assignee != null) probe.setAssignee(assignee.toLowerCase());
+        if (authorEmail != null) {
+            MyUser author = myUserRepository.findByEmail(authorEmail.toLowerCase());
+            if (author != null) {
+                probe.setAuthor(author);
+            } else {
+                return new ArrayList<>(); // Return empty if author not found
+            }
+        }
+        if (assigneeEmail != null) {
+            MyUser assignee = myUserRepository.findByEmail(assigneeEmail.toLowerCase());
+            if (assignee != null) {
+                probe.setAssignee(assignee);
+            } else {
+                return new ArrayList<>(); // Return empty if assignee not found
+            }
+        }
         Example<Task> example = Example.of(probe);
         List<Task> tasks = taskRepository.findAll(example, sortById);
         List<TaskDto> taskDtos = new ArrayList<>();
@@ -76,9 +90,9 @@ public class TaskService {
         return taskDtos;
     }
 
-    public ResponseEntity<Task> updateByAssignee(Authentication authentication,
-                                                 Long id,
-                                                 String assignee) {
+    public ResponseEntity<TaskDto> updateByAssignee(Authentication authentication,
+                                                    Long id,
+                                                    String assignee) {
         if (!taskRepository.existsById(id) ||
                 (!myUserRepository.existsByEmail(assignee) && !assignee.equals("none"))) {
             return ResponseEntity.notFound().build();
@@ -86,19 +100,19 @@ public class TaskService {
         Optional<Task> optTask = taskRepository.findById(id);
         if (optTask.isPresent()) {
             Task task = optTask.get();
-            if (!Objects.equals(authentication.getName(), task.getAuthor())) {
+            if (!Objects.equals(authentication.getName(), task.getAuthor().getEmail())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
-            task.setAssignee(assignee);
-            taskRepository.save(task);
-            return ResponseEntity.ok(task);
+            task.setAssignee(myUserRepository.findByEmail(assignee));
+            taskRepository.save(task); // update task
+            return ResponseEntity.ok(new TaskDto(task, null));
         }
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity<Task> updateByStatus(Authentication authentication,
-                                               Long id,
-                                               TaskStatus status) {
+    public ResponseEntity<TaskDto> updateByStatus(Authentication authentication,
+                                                  Long id,
+                                                  TaskStatus status) {
         // If the taskId path variable doesn't refer to an existing task ID, the endpoint respond with the 404 NOT FOUND.
         if (!taskRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -107,13 +121,13 @@ public class TaskService {
         if (optTask.isPresent()) {
             Task task = optTask.get();
             // If the myUser trying to change the task status isn't the author or assignee, respond with the 403 FORBIDDEN.
-            if (!Objects.equals(authentication.getName(), task.getAuthor()) &&
-                    !Objects.equals(authentication.getName(), task.getAssignee())) {
+            if (!Objects.equals(authentication.getName(), task.getAuthor().getEmail()) &&
+                    !(task.getAssignee() != null && Objects.equals(authentication.getName(), task.getAssignee().getEmail()))) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
             task.setStatus(status);
-            taskRepository.save(task);
-            return ResponseEntity.ok(task);
+            taskRepository.save(task); // update task
+            return ResponseEntity.ok(new TaskDto(task, null));
         }
         return ResponseEntity.badRequest().build();
     }

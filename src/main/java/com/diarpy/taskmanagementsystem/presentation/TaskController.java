@@ -24,8 +24,8 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task postTask(Authentication authentication,
-                         @RequestBody @Valid Task task) {
+    public TaskDto postTask(Authentication authentication,
+                            @RequestBody @Valid Task task) {
         return taskService.save(authentication, task);
     }
 
@@ -36,16 +36,16 @@ public class TaskController {
     }
 
     @PutMapping("/{id}/assign")
-    public ResponseEntity<Task> updateTaskByAssignee(Authentication authentication,
-                                                     @PathVariable Long id,
-                                                     @RequestBody AssignTaskRequest assignTaskRequest) {
+    public ResponseEntity<TaskDto> updateTaskByAssignee(Authentication authentication,
+                                                        @PathVariable Long id,
+                                                        @RequestBody AssignTaskRequest assignTaskRequest) {
         return taskService.updateByAssignee(authentication, id, assignTaskRequest.assignee());
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Task> updateTaskByStatus(Authentication authentication,
-                                                   @PathVariable Long id,
-                                                   @RequestBody StatusTaskRequest statusTaskRequest) {
+    public ResponseEntity<TaskDto> updateTaskByStatus(Authentication authentication,
+                                                      @PathVariable Long id,
+                                                      @RequestBody StatusTaskRequest statusTaskRequest) {
         return taskService.updateByStatus(authentication, id, statusTaskRequest.status());
     }
 
@@ -63,5 +63,4 @@ public class TaskController {
 
     record AssignTaskRequest(String assignee) {}
     record StatusTaskRequest(TaskStatus status) {}
-    record CommentRequest(String text) { }
 }

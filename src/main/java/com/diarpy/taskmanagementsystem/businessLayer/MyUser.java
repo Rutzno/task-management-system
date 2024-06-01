@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Mack_TB
  * @since 18/05/2024
- * @version 1.0.2
+ * @version 1.0.5
  */
 
 @Entity
@@ -27,8 +27,10 @@ public class MyUser {
     private String password;
     private String authority;
 
-    @OneToMany(mappedBy = "myUser")
-    private List<Task> tasks = new ArrayList<>();
+    @OneToMany(mappedBy = "author")
+    private List<Task> createdTasks = new ArrayList<>();
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> assignedTasks = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -62,11 +64,19 @@ public class MyUser {
         this.authority = authority;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public List<Task> getCreatedTasks() {
+        return createdTasks;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setCreatedTasks(List<Task> createdTasks) {
+        this.createdTasks = createdTasks;
+    }
+
+    public List<Task> getAssignedTasks() {
+        return assignedTasks;
+    }
+
+    public void setAssignedTasks(List<Task> assignedTasks) {
+        this.assignedTasks = assignedTasks;
     }
 }
