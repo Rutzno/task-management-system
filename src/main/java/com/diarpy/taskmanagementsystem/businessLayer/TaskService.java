@@ -1,5 +1,8 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.businessLayer;
 
+import com.diarpy.taskmanagementsystem.persistance.CommentRepository;
+import com.diarpy.taskmanagementsystem.persistance.MyUserRepository;
+import com.diarpy.taskmanagementsystem.persistance.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;

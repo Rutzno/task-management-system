@@ -1,4 +1,4 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.businessLayer;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

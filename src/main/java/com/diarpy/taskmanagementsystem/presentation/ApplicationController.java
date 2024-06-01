@@ -1,5 +1,7 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.presentation;
 
+import com.diarpy.taskmanagementsystem.businessLayer.MyUser;
+import com.diarpy.taskmanagementsystem.businessLayer.MyUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

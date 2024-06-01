@@ -1,4 +1,4 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

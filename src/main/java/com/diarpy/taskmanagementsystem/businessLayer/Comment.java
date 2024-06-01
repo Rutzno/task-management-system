@@ -1,4 +1,4 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.businessLayer;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

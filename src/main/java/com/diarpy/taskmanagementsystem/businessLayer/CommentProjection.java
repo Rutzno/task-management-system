@@ -1,4 +1,4 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.businessLayer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

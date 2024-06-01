@@ -1,5 +1,6 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.persistance;
 
+import com.diarpy.taskmanagementsystem.businessLayer.MyUser;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

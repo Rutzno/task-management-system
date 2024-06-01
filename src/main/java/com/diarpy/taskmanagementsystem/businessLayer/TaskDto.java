@@ -1,12 +1,7 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.businessLayer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Mack_TB
@@ -14,38 +9,33 @@ import java.util.List;
  * @version 1.0.5
  */
 
-@Entity
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TaskDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
-    @NotBlank(message = "Title is mandatory")
     private String title;
-    @NotBlank(message = "Description is mandatory")
     private String description;
     private TaskStatus status;
     private String author;
     private String assignee;
-    /* @JsonProperty(value = "total_comments")
-     private int totalComments;*/
-    @OneToMany(mappedBy = "task")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Comment> comments = new ArrayList<>();
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private MyUser myUser;
+    @JsonProperty(value = "total_comments")
+    private int totalComments;
 
-    public Task() {
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public TaskDto(Task task) {
+        this.id = task.getId();
+        this.title = task.getTitle();
+        this.description = task.getDescription();
+        this.status = task.getStatus();
+        this.author = task.getAuthor();
+        this.assignee = task.getAssignee();
+        this.totalComments = task.getComments().size();
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -88,19 +78,11 @@ public class Task {
         this.assignee = assignee;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public int getTotalComments() {
+        return totalComments;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public MyUser getMyUser() {
-        return myUser;
-    }
-
-    public void setMyUser(MyUser myUser) {
-        this.myUser = myUser;
+    public void setTotalComments(int totalComments) {
+        this.totalComments = totalComments;
     }
 }

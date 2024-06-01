@@ -1,4 +1,4 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

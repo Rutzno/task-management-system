@@ -1,5 +1,7 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.persistance;
 
+import com.diarpy.taskmanagementsystem.businessLayer.Comment;
+import com.diarpy.taskmanagementsystem.businessLayer.CommentProjection;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

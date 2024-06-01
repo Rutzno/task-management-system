@@ -1,5 +1,6 @@
-package com.diarpy.taskmanagementsystem;
+package com.diarpy.taskmanagementsystem.persistance;
 
+import com.diarpy.taskmanagementsystem.businessLayer.Task;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
