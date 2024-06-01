@@ -62,7 +62,6 @@ public class TaskService {
     }
 
     public List<TaskDto> findAllTasks(String authorEmail, String assigneeEmail) {
-        Sort sortById = Sort.by("id").descending();
         Task probe = new Task();
         if (authorEmail != null) {
             MyUser author = myUserRepository.findByEmail(authorEmail.toLowerCase());
@@ -80,6 +79,7 @@ public class TaskService {
                 return new ArrayList<>(); // Return empty if assignee not found
             }
         }
+        Sort sortById = Sort.by("id").descending();
         Example<Task> example = Example.of(probe);
         List<Task> tasks = taskRepository.findAll(example, sortById);
         List<TaskDto> taskDtos = new ArrayList<>();
